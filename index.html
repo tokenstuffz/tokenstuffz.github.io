@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Agario Skin Generator</title>
-    <link rel="stylesheet" href="styles.css">
+    <script defer src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js"></script>
     <script defer src="script.js"></script>
     <style>
         body {
@@ -91,11 +92,24 @@
             <button id="upload-btn">Upload</button>
             <div id="upload-message"></div>
         </section>
-        
+
         <button id="save-btn">Save Skin</button>
+        <button id="upload-cloud-btn">Upload to Cloud</button>
     </main>
 
     <script>
+        const firebaseConfig = {
+            apiKey: "YOUR_FIREBASE_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const storage = firebase.storage();
+
         const canvas = document.getElementById("skinCanvas");
         const ctx = canvas.getContext("2d");
 
@@ -123,34 +137,15 @@
             };
         });
 
-        document.getElementById("add-text-btn").addEventListener("click", function() {
-            const text = document.getElementById("text-input").value;
-            const font = document.getElementById("font-style").value;
-            ctx.font = `bold 40px ${font}`;
-            ctx.fillStyle = "white";
-            ctx.textAlign = "center";
-            ctx.fillText(text, canvas.width / 2, canvas.height - 40);
-        });
-
-        document.getElementById("upload-btn").addEventListener("click", function() {
-            let fileInput = document.getElementById("skin-upload");
-            let uploadMessage = document.getElementById("upload-message");
-            if (fileInput.files.length > 0) {
-                let file = fileInput.files[0];
-                let reader = new FileReader();
-                reader.onload = function(event) {
-                    let img = new Image();
-                    img.src = event.target.result;
-                    img.onload = () => {
-                        ctx.clearRect(0, 0, canvas.width, canvas.height);
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    };
-                    uploadMessage.textContent = "Skin uploaded successfully!";
-                };
-                reader.readAsDataURL(file);
-            } else {
-                uploadMessage.textContent = "Please select a file to upload.";
-            }
+        document.getElementById("upload-cloud-btn").addEventListener("click", function() {
+            canvas.toBlob(blob => {
+                const storageRef = storage.ref("skins/" + Date.now() + ".png");
+                storageRef.put(blob).then(snapshot => {
+                    snapshot.ref.getDownloadURL().then(url => {
+                        alert("Skin uploaded! URL: " + url);
+                    });
+                });
+            }, "image/png");
         });
 
         document.getElementById("save-btn").addEventListener("click", function() {
@@ -158,6 +153,15 @@
             link.download = "agario_skin.png";
             link.href = canvas.toDataURL();
             link.click();
+        });
+
+        document.getElementById("add-text-btn").addEventListener("click", function() {
+            const text = document.getElementById("text-input").value;
+            const font = document.getElementById("font-style").value;
+            ctx.font = `bold 40px ${font}`;
+            ctx.fillStyle = "white";
+            ctx.textAlign = "center";
+            ctx.fillText(text, canvas.width / 2, canvas.height - 40);
         });
     </script>
 </body>
