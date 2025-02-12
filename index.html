@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Agario Skin Generator</title>
-    <script defer src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
     <script defer src="script.js"></script>
     <style>
         body {
@@ -71,7 +72,6 @@
                 <option value="realistic">Realistic</option>
             </select>
             <button id="generate-btn">Generate</button>
-            <p id="token-count">Tokens Left: <span id="tokens">10</span></p>
             <canvas id="skinCanvas" width="512" height="512"></canvas>
         </section>
 
@@ -98,11 +98,12 @@
     </main>
 
     <script>
+        // Initialize Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDExYMI1_M6O1DeTnORpi15MmsMTbveoBY",
             authDomain: "agario-d3e20.firebaseapp.com",
             projectId: "agario-d3e20",
-            storageBucket: "agario-d3e20.firebasestorage.app",
+            storageBucket: "agario-d3e20.appspot.com",
             messagingSenderId: "534605675330",
             appId: "1:534605675330:web:5939e119c8681d3c02a6db",
             measurementId: "G-NB6EW0QYM0"
