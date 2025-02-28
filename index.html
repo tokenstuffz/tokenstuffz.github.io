@@ -1,246 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Agario Skin Generator</title>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-    <script defer src="script.js"></script>
+    <title>Discord Servers & Installations</title>
     <style>
         body {
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+            font-family: Arial, sans-serif;
+            background-color: #1e1e1e;
             color: white;
             text-align: center;
+            margin: 0;
+            padding: 0;
         }
-        header {
-            padding: 20px;
-            font-size: 28px;
-            font-weight: bold;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        .container {
+            width: 90%;
+            margin: 20px auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
         }
-        main {
-            max-width: 900px;
-            margin: 30px auto;
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
-        }
-        input, select, button {
-            padding: 12px;
-            margin: 10px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        button {
-            background: #ff4d4d;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-        }
-        button:hover {
-            background: #ff1a1a;
-            transform: scale(1.05);
-        }
-        canvas {
-            margin-top: 20px;
+        .card {
+            background: #2a2a2a;
             border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+            width: 300px;
+            margin: 20px;
+            padding: 20px;
+            text-align: left;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .card img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        .card h3 {
+            margin: 10px 0;
+        }
+        .card p {
+            font-size: 14px;
+            color: #bbb;
+        }
+        .button {
+            display: inline-block;
+            background-color: #5865F2;
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .button:hover {
+            background-color: #4752C4;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>AI Agario Skin Generator</h1>
-    </header>
-    <main>
-        <section id="generate-section">
-            <h2>Generate a Custom Skin</h2>
-            <input type="text" id="prompt" placeholder="Enter your skin idea...">
-            <select id="style">
-                <option value="cartoony">Cartoony</option>
-                <option value="anime">Anime</option>
-                <option value="realistic">Realistic</option>
-            </select>
-            <button id="generate-btn">Generate</button>
-            <canvas id="skinCanvas" width="512" height="512"></canvas>
-        </section>
 
-        <section id="text-section">
-            <h2>Add Text to Skin</h2>
-            <input type="text" id="text-input" placeholder="Enter text...">
-            <select id="font-style">
-                <option value="Arial">Arial</option>
-                <option value="Comic Sans MS">Comic Sans</option>
-                <option value="Impact">Impact</option>
-            </select>
-            <button id="add-text-btn">Add Text</button>
-        </section>
-
-        <section id="upload-section">
-            <h2>Upload Your Own Skin</h2>
-            <input type="file" id="skin-upload" accept="image/*">
-            <button id="upload-btn">Upload</button>
-            <div id="upload-message"></div>
-        </section>
-
-        <button id="save-btn">Save Skin</button>
-        <button id="upload-cloud-btn">Upload to Cloud</button>
-    </main>
-
-    <script>
-        // Initialize Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyDExYMI1_M6O1DeTnORpi15MmsMTbveoBY",
-            authDomain: "agario-d3e20.firebaseapp.com",
-            projectId: "agario-d3e20",
-            storageBucket: "agario-d3e20.appspot.com",
-            messagingSenderId: "534605675330",
-            appId: "1:534605675330:web:5939e119c8681d3c02a6db",
-            measurementId: "G-NB6EW0QYM0"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const storage = firebase.storage();
-
-        const canvas = document.getElementById("skinCanvas");
-        const ctx = canvas.getContext("2d");
-
-        document.getElementById("generate-btn").addEventListener("click", async function() {
-            const prompt = document.getElementById("prompt").value;
-            const style = document.getElementById("style").value;
-            const response = await fetch("https://api.openai.com/v1/images/generations", {
-                method: "POST",
-                headers: {
-                    "Authorization": "Bearer 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",
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    prompt: `${prompt}, ${style}, high quality, 512x512`,
-                    n: 1,
-                    size: "512x512"
-                })
-            });
-            const data = await response.json();
-            const img = new Image();
-            img.src = data.data[0].url;
-            img.onload = () => {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            };
-        });
-
-        document.getElementById("upload-cloud-btn").addEventListener("click", function() {
-            canvas.toBlob(blob => {
-                const storageRef = storage.ref("skins/" + Date.now() + ".png");
-                storageRef.put(blob).then(snapshot => {
-                    snapshot.ref.getDownloadURL().then(url => {
-                        alert("Skin uploaded! URL: " + url);
-                    });
-                });
-            }, "image/png");
-        });
-
-        document.getElementById("save-btn").addEventListener("click", function() {
-            const link = document.createElement("a");
-            link.download = "agario_skin.png";
-            link.href = canvas.toDataURL();
-            link.click();
-        });
-
-        document.getElementById("add-text-btn").addEventListener("click", function() {
-            const text = document.getElementById("text-input").value;
-            const font = document.getElementById("font-style").value;
-            ctx.font = `bold 40px ${font}`;
-            ctx.fillStyle = "white";
-            ctx.textAlign = "center";
-            ctx.fillText(text, canvas.width / 2, canvas.height - 40);
-        });
-    </script>
-=======
-    <title>QxAngel</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="./favicon.png" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="js/script.js"></script>
-
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HBCVL1X8FB"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-HBCVL1X8FB');
-    </script>
-
-</head>
-<body>
-=======
-    <title>QxAngel</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="./favicon.png" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="js/script.js"></script>
-
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HBCVL1X8FB"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-HBCVL1X8FB');
-    </script>
-
-</head>
-<body>
->>>>>>> Stashed changes
+    <h1>Welcome to My Discord Servers</h1>
+    
     <div class="container">
-        <h1><img src="QxIcon.png" id="logo"> QxAngel</h1>
-    </div>
-
-    <div class="container">
+        <!-- Discord Server Card -->
         <div class="card">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <p><span class="text-primary"><b>Añadir Este Repositorio :      </span></b></p>
-                    <a class="btn btn-sm btn-primary" href="javascript:void(0);" onclick="copyToClipboard('https://qxangel.github.io')">Copy URL</a>
-                </div>
-                <a class="btn btn-sm btn-primary mb-2" href="https://drive.google.com/drive/folders/1--z__rUvquWrrxoK8e4m-IoexQzf6fnA?usp=sharing">GoogleDrive</a>
-                <a class="btn btn-sm btn-primary mb-2" href="scarlet://repo=https://qxangel.github.io/scarlet.json">Add To Scarlet</a>
-                <a class="btn btn-sm btn-primary mb-2" href="esign://addsource?url=https://qxangel.github.io/repo.json">Add To ESign</a>
-                <a class="btn btn-sm btn-primary mb-2" href="altstore://source?url=https://qxangel.github.io/repo.json">Add To AltStore</a>
-                <a class="btn btn-sm btn-primary mb-2" href="https://qxangel.github.io/iPA-SIGN/">Sign Ur Apps</a>
+            <img src="server_image.png" alt="Server Image">
+            <h3>ElementiaMC</h3>
+            <p>A Minecraft server hosting platform with premium features.</p>
+            <a href="https://discord.gg/your-server" class="button">Join Server</a>
+        </div>
+
+        <div class="card">
+            <img src="server_image2.png" alt="Server Image">
+            <h3>Modding Community</h3>
+            <p>A place to discuss and share VR modding tools.</p>
+            <a href="https://discord.gg/your-server-2" class="button">Join Server</a>
         </div>
     </div>
 
-    <p></p>
+    <h1>Installable Tools</h1>
 
-    <div class="container cards-container">
-        <div class="outside-buttons">
-            <a class="btn btn-sm btn-primary mb-2" href="https://www.youtube.com/@6ky_l">Subscribe</a>
-            <a class="btn btn-sm btn-primary mb-2" href="https://www.paypal.me/onlykex1">Buy Me A Takis</a>
-            <a class="btn btn-sm btn-primary mb-2" href="https://github.com/QxAngel">GitHub</a>
+    <div class="container">
+        <!-- Installation Card -->
+        <div class="card">
+            <img src="tool_image.png" alt="Tool Image">
+            <h3>VR Mod Menu</h3>
+            <p><strong>Version:</strong> 1.2.0</p>
+            <p><strong>Author:</strong> YourName</p>
+            <p>A mod menu for VR games with customizable options.</p>
+            <a href="download_link" class="button">Download</a>
+        </div>
+
+        <div class="card">
+            <img src="bot_image.png" alt="Tool Image">
+            <h3>Discord Ticket Bot</h3>
+            <p><strong>Version:</strong> 2.5.1</p>
+            <p><strong>Author:</strong> YourName</p>
+            <p>A feature-rich Discord bot for managing support tickets.</p>
+            <a href="download_link" class="button">Download</a>
         </div>
     </div>
 
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 </body>
 </html>
